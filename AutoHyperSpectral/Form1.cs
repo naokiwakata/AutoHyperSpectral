@@ -27,6 +27,7 @@ namespace AutoHyperSpectral
         }
 
         private Bitmap _bitmap;
+        private Predict _predict;
 
         private void openAvi(object sender, EventArgs e)
         {
@@ -54,37 +55,11 @@ namespace AutoHyperSpectral
 
         private async void button2_ClickAsync(object sender, EventArgs e)
         {
-            MemoryStream ms = new MemoryStream();
-            _bitmap.Save(ms, ImageFormat.Jpeg);
-            byte[] byteImage = ms.ToArray();
-            string imageBase64 = Convert.ToBase64String(byteImage);
+            Http http = new Http();
 
-            var parameters = new Dictionary<string, string>()
-            {
-                { "post_img", imageBase64},
-            };
-
-            using (var client = new HttpClient())
-            {
-                string jsonString = JsonSerializer.Serialize(parameters);
-                var content = new StringContent(jsonString, Encoding.UTF8, "application/json");
-                HttpResponseMessage response =
-                    await client.PostAsync($"http://127.0.0.1:5000/findHyperLeaf", content);
-                var b = response.Content;
-
-                if (response.IsSuccessStatusCode)
-                {
-                    //レスポンスからJSON文字列を取得
-                    string contentStream =  await response.Content.ReadAsStringAsync();
-
-                    Predict predict = JsonSerializer.Deserialize<Predict>(contentStream);
-                    Console.WriteLine(predict.Boxes[0]);
-                }
-                else
-                {
-                    MessageBox.Show("Failed to communicate");
-                }
-            }
+            Predict predict = await http.PredictImage(_bitmap);
+            this._predict = predict;
+            Console.WriteLine("SUCEESS");
         }
     }
 }
