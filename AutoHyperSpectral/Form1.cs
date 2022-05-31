@@ -80,6 +80,10 @@ namespace AutoHyperSpectral
                     Predict predict = JsonSerializer.Deserialize<Predict>(contentStream);
                     Console.WriteLine(predict.Boxes[0]);
                 }
+                else
+                {
+                    MessageBox.Show("Failed to communicate");
+                }
             }
         }
     }
