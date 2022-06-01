@@ -1,4 +1,5 @@
-﻿using System.Drawing;
+﻿using System.Collections.Generic;
+using System.Drawing;
 using OpenCvSharp;
 using OpenCvSharp.Extensions;
 
@@ -45,6 +46,19 @@ namespace ExtensionMethods
 
             _bitmap = BitmapConverter.ToBitmap(viewMat);
             return _bitmap;
+        }
+
+        public static Bitmap DrawBox(this Graphics graphics, Bitmap bitmap,List<float> boxes)
+        {
+            graphics = Graphics.FromImage(bitmap);
+            //(この場合はPenを作成せずに、Pens.Blackを使っても良い)
+            Pen pen = new Pen(Color.Red, 3);
+            //位置(10, 20)に100x80の長方形を描く
+            graphics.DrawRectangle(pen, boxes[0], boxes[1], boxes[2] - boxes[0], boxes[3] - boxes[1]);
+
+            pen.Dispose();
+
+            return bitmap;
         }
     }
 }
