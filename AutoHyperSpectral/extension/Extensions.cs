@@ -41,19 +41,15 @@ namespace ExtensionMethods
                 }
                 mat.Dispose();
             }
-            capture.Dispose();
-
-
             _bitmap = BitmapConverter.ToBitmap(viewMat);
             return _bitmap;
         }
 
-        public static void DrawBox(this Graphics graphics, Bitmap bitmap,List<float> boxes)
+        public static void DrawBox(this Graphics graphics, Bitmap bitmap,List<float> boxes, int index)
         {
             graphics = Graphics.FromImage(bitmap);
-            //(この場合はPenを作成せずに、Pens.Blackを使っても良い)
-            Pen pen = new Pen(Color.Red, 3);
-            //位置(10, 20)に100x80の長方形を描く
+            Pen pen = new Pen(Color.Red, 2);
+            graphics.DrawString(index.ToString(), new Font("MS UI Gothic", 15), Brushes.White, boxes[0], boxes[1]);
             graphics.DrawRectangle(pen, boxes[0], boxes[1], boxes[2] - boxes[0], boxes[3] - boxes[1]);
 
             pen.Dispose();

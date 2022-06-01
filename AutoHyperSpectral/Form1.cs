@@ -24,74 +24,120 @@ namespace AutoHyperSpectral
         public Form1()
         {
             InitializeComponent();
+
         }
 
         private Bitmap _bitmap;
-        private Predict _predict;
+        private string _filename;
 
-        private void openAvi(object sender, EventArgs e)
+        // GUI 
+        private List<CheckBox> _checkBoxes = new List<CheckBox>();
+
+        // 予測結果
+        private Predict _predict;
+        private List<List<float>> _predictBoxes = new List<List<float>>();
+        private List<List<List<bool>>> _predictMasks = new List<List<List<bool>>>();
+        private List<int> _predictClasses = new List<int>();
+
+        private void OpenAvi(object sender, EventArgs e)
         {
             button2.Enabled = false;
-            button3.Enabled = false;
 
             Dialog dialog = new Dialog();
-            string filename = dialog.openDialog();
+            _filename = dialog.openDialog();
 
-            if (filename == "") return;
+            if (_filename == "") return;
 
-            VideoCapture videoCapture = new VideoCapture(filename);
-
-            _bitmap = videoCapture.ToBmp();
-
-            String jpgFileName = filename.Split('.')[0] + ".jpg";
-            /* _bitmap.Save(
-               jpgFileName,
-               System.Drawing.Imaging.ImageFormat.Jpeg
-           );*/
+            initBitmap();   
             pictureBox1.Image = _bitmap;
             button2.Enabled = true;
         }
 
-        private void pictureBox1_Click(object sender, EventArgs e)
+        private async void PostImage(object sender, EventArgs e)
         {
-
-        }
-
-        private async void button2_ClickAsync(object sender, EventArgs e)
-        {
+            textBox1.Text = "...Loading...";
+            // connect to FLASK
             if(_bitmap == null)
             {
                 return; 
             }
             Http http = new Http();
+            _predict = await http.PredictImage(_bitmap);
 
-            Predict predict = await http.PredictImage(_bitmap);
-            this._predict = predict;
+            _predictBoxes = _predict.Boxes;
+            _predictMasks = _predict.Masks;
+            _predictClasses = _predict.Classes;
+
             Console.WriteLine("SUCEESS");
-            button3.Enabled = true;
+
+            // Draw $ CreateBox
+            int height = 200;
+            int boxesCount = _predict.Boxes.Count;
+
+            for (int i = 0; i < boxesCount; i++)
+            {
+                // create CheckBox
+                var checkBox = new CheckBox();
+                checkBox.Location = new System.Drawing.Point(30, height);
+                checkBox.Checked = true;
+                checkBox.Size = new System.Drawing.Size(75, 23);
+                checkBox.Name = i.ToString();
+                checkBox.TabIndex = 0;
+                checkBox.Text = i.ToString();
+                checkBox.UseVisualStyleBackColor = true;
+
+                _checkBoxes.Add(checkBox);
+                Controls.Add(checkBox);
+                height = height + 20;
+                DrawBox(i);
+            }
+            pictureBox1.Image = _bitmap;
+            textBox1.Text = "Finish";
         }
 
-        private void button3_Click(object sender, EventArgs e)
+        private void SelectLeaf(object sender, EventArgs e)
         {
-            if(_predict == null)
-            {
-                return;
-            }
-            int numberBoxes = _predict.Boxes.Count;
+            initBitmap();
 
-            for(int i = 0; i < numberBoxes; i++)
+            Console.WriteLine("--------------");
+            var i = 0;
+            foreach (var checkBox in _checkBoxes)
             {
-                List<float> boxes = _predict.Boxes[i];
-                List<List<bool>> masks = _predict.Masks[i];
-                int classes = _predict.Classes[i];
-
-                Graphics graphics = CreateGraphics();
-                graphics.DrawBox(_bitmap, boxes);
-                graphics.FillLeaf(_bitmap, masks);
- 
-                graphics.Dispose();
-                pictureBox1.Image = _bitmap;
+                if (checkBox.Checked == true)
+                {
+                    DrawBox(i);
+                    Console.WriteLine(i);
+                }
+                i++;
             }
+            pictureBox1.Image = _bitmap;
+
+        }
+
+        private void initBitmap()
+        {
+            VideoCapture videoCapture = new VideoCapture(_filename);
+            _bitmap = videoCapture.ToBmp();
+            videoCapture.Dispose();
+        }
+
+        // 関数化
+        private void DrawBox(int i)
+        {
+            List<float> boxes = _predictBoxes[i];
+            List<List<bool>> masks = _predictMasks[i];
+            int classes = _predictClasses[i];
+
+            Graphics graphics = CreateGraphics();
+            graphics.DrawBox(_bitmap, boxes,i);
+            graphics.FillLeaf(_bitmap, masks);
+
+            graphics.Dispose();
+        }
+
+        private void textBox1_TextChanged(object sender, EventArgs e)
+        {
+
         }
     }
 }
