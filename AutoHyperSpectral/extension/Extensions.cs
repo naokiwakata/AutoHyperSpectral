@@ -48,7 +48,7 @@ namespace ExtensionMethods
             return _bitmap;
         }
 
-        public static Bitmap DrawBox(this Graphics graphics, Bitmap bitmap,List<float> boxes)
+        public static void DrawBox(this Graphics graphics, Bitmap bitmap,List<float> boxes)
         {
             graphics = Graphics.FromImage(bitmap);
             //(この場合はPenを作成せずに、Pens.Blackを使っても良い)
@@ -57,8 +57,32 @@ namespace ExtensionMethods
             graphics.DrawRectangle(pen, boxes[0], boxes[1], boxes[2] - boxes[0], boxes[3] - boxes[1]);
 
             pen.Dispose();
+        }
 
-            return bitmap;
+        public static void FillLeaf(this Graphics graphics, Bitmap bitmap, List<List<bool>> masks)
+        {
+            graphics = Graphics.FromImage(bitmap);
+
+            int imgWidth = masks[0].Count;
+            int imgHeight = masks.Count;
+            int j = 0;
+
+            for (int y = 0; y < imgHeight; y++)
+            {
+                int l = 0;
+                for (int x = 0; x < imgWidth; x++)
+                {
+                    if (masks[j][l] == true)
+                    {
+                        Pen pen = new Pen(Color.FromArgb(40, Color.Green), 1);
+                        graphics.DrawRectangle(pen, new Rectangle(x, y, 1, 1));
+                        pen.Dispose();
+                    }
+                    l++;
+                }
+                j++;
+            }
+           
         }
     }
 }

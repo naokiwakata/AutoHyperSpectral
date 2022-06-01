@@ -85,36 +85,10 @@ namespace AutoHyperSpectral
                 List<List<bool>> masks = _predict.Masks[i];
                 int classes = _predict.Classes[i];
 
-                //短径を描画
                 Graphics graphics = CreateGraphics();
                 graphics.DrawBox(_bitmap, boxes);
-                graphics.Dispose();
-
-                //葉部分を塗りつぶす
-                graphics = Graphics.FromImage(_bitmap);
-
-                int imgWidth = masks[0].Count;
-                int imgHeight = masks.Count;
-                int j = 0;
-                
-                for (int y = 0; y < imgHeight; y++)
-                {
-                    int l = 0;
-
-                    for (int x = 0; x < imgWidth; x++)
-                    {
-                        if (masks[j][l] == true)
-                        {
-
-                            //半透明のPenを作成する
-                            Pen p = new Pen(Color.FromArgb(40, Color.Green), 1);
-                            //四角を描画する
-                            graphics.DrawRectangle(p, new Rectangle(x, y, 1, 1));
-                        }
-                        l++;
-                    }
-                    j++;
-                }
+                graphics.FillLeaf(_bitmap, masks);
+ 
                 graphics.Dispose();
                 pictureBox1.Image = _bitmap;
             }
