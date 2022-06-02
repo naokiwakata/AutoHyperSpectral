@@ -16,6 +16,7 @@ using System.Drawing.Imaging;
 using System.Net.Http;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using OpenCvSharp.Extensions;
 
 namespace AutoHyperSpectral
 {
@@ -29,6 +30,7 @@ namespace AutoHyperSpectral
 
         private Bitmap _bitmap;
         private string _filename;
+        private VideoCapture _videoCapture;
 
         // GUI 
         private List<CheckBox> _checkBoxes = new List<CheckBox>();
@@ -48,7 +50,8 @@ namespace AutoHyperSpectral
 
             if (_filename == "") return;
 
-            initBitmap();   
+            _videoCapture = new VideoCapture(_filename);
+            _bitmap = _videoCapture.ToBmp();
             pictureBox1.Image = _bitmap;
             button2.Enabled = true;
         }
@@ -97,7 +100,8 @@ namespace AutoHyperSpectral
 
         private void SelectLeaf(object sender, EventArgs e)
         {
-            initBitmap();
+            _videoCapture = new VideoCapture(_filename);
+            _bitmap = _videoCapture.ToBmp();
 
             Console.WriteLine("--------------");
             var i = 0;
@@ -114,13 +118,6 @@ namespace AutoHyperSpectral
 
         }
 
-        private void initBitmap()
-        {
-            VideoCapture videoCapture = new VideoCapture(_filename);
-            _bitmap = videoCapture.ToBmp();
-            videoCapture.Dispose();
-        }
-
         // 関数化
         private void DrawBox(int i)
         {
@@ -134,10 +131,66 @@ namespace AutoHyperSpectral
 
             graphics.Dispose();
         }
-
-        private void textBox1_TextChanged(object sender, EventArgs e)
+        private void button3_Click(object sender, EventArgs e)
         {
+            Console.WriteLine("start");
+            var i = 0;
+            foreach (var checkBox in _checkBoxes)
+            {
+                if (checkBox.Checked == true)
+                {
+                    SaveToCSV(_predictMasks[i],i);
+                    Console.WriteLine(i);
+                }
+                i++;
+            }
+        }
+        private void SaveToCSV(List<List<bool>> masks,int index)
+        {
+            string savefile = "C:/Users/wakanao/source/repos/AutoHyperSpectral/" + index.ToString() + ".csv";
+            using (StreamWriter streamWriter = new StreamWriter(savefile, false))
+            {
+                //行名を書く
+                String lineName = "X,Y,";
+                for (int i = 0; i < 60; i++)
+                {
+                    lineName = $"{lineName}" + $"band{i + 1},";
 
+                }
+                streamWriter.WriteLine(lineName);
+
+                int imgWidth = masks[0].Count;
+                int imgHeight = masks.Count;
+                int j = 0;
+
+                for (int y = 0; y < imgHeight; y++)
+                {
+                    //画像を生成
+                    _videoCapture.PosFrames = y;
+                    var mat = new Mat();
+                    _videoCapture.Read(mat);
+
+                    int interval = mat.Height / 60;
+
+                    int l = 0;
+                    for (int x = 0; x < imgWidth; x++)
+                    {
+                        if (masks[j][l] == true)
+                        {
+                            String bandStr = $"{x},{y},";
+                            //60band
+                            for (int i = 0; i < 60; i++)
+                            {
+                                Vec3b pixel = mat.At<Vec3b>(i * interval, x);
+                                bandStr = bandStr + pixel.Item0 + ",";
+                            }
+                            streamWriter.WriteLine(bandStr);
+                        }
+                        l++;
+                    }
+                    j++;
+                }
+            }
         }
     }
 }
