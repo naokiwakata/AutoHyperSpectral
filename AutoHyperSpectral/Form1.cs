@@ -41,6 +41,7 @@ namespace AutoHyperSpectral
         private List<List<List<bool>>> _predictMasks = new List<List<List<bool>>>();
         private List<int> _predictClasses = new List<int>();
 
+
         private void OpenAvi(object sender, EventArgs e)
         {
             button2.Enabled = false;
@@ -54,8 +55,9 @@ namespace AutoHyperSpectral
             _bitmap = _videoCapture.ToBmp();
             pictureBox1.Image = _bitmap;
             button2.Enabled = true;
-        }
 
+         
+        }
         private async void PostImage(object sender, EventArgs e)
         {
             textBox1.Text = "...Loading...";
@@ -66,36 +68,21 @@ namespace AutoHyperSpectral
             }
             Http http = new Http();
             _predict = await http.PredictImage(_bitmap);
-
             _predictBoxes = _predict.Boxes;
             _predictMasks = _predict.Masks;
             _predictClasses = _predict.Classes;
 
             Console.WriteLine("SUCEESS");
 
-            // Draw $ CreateBox
-            int height = 200;
             int boxesCount = _predict.Boxes.Count;
 
             for (int i = 0; i < boxesCount; i++)
             {
-                // create CheckBox
-                var checkBox = new CheckBox();
-                checkBox.Location = new System.Drawing.Point(30, height);
-                checkBox.Checked = true;
-                checkBox.Size = new System.Drawing.Size(75, 23);
-                checkBox.Name = i.ToString();
-                checkBox.TabIndex = 0;
-                checkBox.Text = i.ToString();
-                checkBox.UseVisualStyleBackColor = true;
-
-                _checkBoxes.Add(checkBox);
-                Controls.Add(checkBox);
-                height = height + 20;
+                CreateCheckBox(i);
                 DrawBox(i);
             }
             pictureBox1.Image = _bitmap;
-            textBox1.Text = "Finish";
+            textBox1.Text = "Finish!!!";
         }
 
         private void SelectLeaf(object sender, EventArgs e)
@@ -117,8 +104,40 @@ namespace AutoHyperSpectral
             pictureBox1.Image = _bitmap;
 
         }
+        private void SaveFile(object sender, EventArgs e)
+        {
+            Console.WriteLine("start");
+            var i = 0;
+            foreach (var checkBox in _checkBoxes)
+            {
+                if (checkBox.Checked == true)
+                {
+                    Util util = new Util();
+                    //util.SaveToCSV(_predictMasks[i], _videoCapture,i);
+                    SaveToCSV(_predictMasks[i], i);
+                    Console.WriteLine(i);
+                }
+                i++;
+            }
+        }
 
         // 関数化
+
+        private void CreateCheckBox(int index)
+        {
+            int height = 150 + (index+1) *20;
+            var checkBox = new CheckBox();
+            checkBox.Location = new System.Drawing.Point(30, height);
+            checkBox.Checked = true;
+            checkBox.Size = new System.Drawing.Size(75, 23);
+            checkBox.Name = index.ToString();
+            checkBox.TabIndex = 0;
+            checkBox.Text = index.ToString();
+            checkBox.UseVisualStyleBackColor = true;
+
+            _checkBoxes.Add(checkBox);
+            Controls.Add(checkBox);
+        }
         private void DrawBox(int i)
         {
             List<float> boxes = _predictBoxes[i];
@@ -131,23 +150,10 @@ namespace AutoHyperSpectral
 
             graphics.Dispose();
         }
-        private void button3_Click(object sender, EventArgs e)
-        {
-            Console.WriteLine("start");
-            var i = 0;
-            foreach (var checkBox in _checkBoxes)
-            {
-                if (checkBox.Checked == true)
-                {
-                    SaveToCSV(_predictMasks[i],i);
-                    Console.WriteLine(i);
-                }
-                i++;
-            }
-        }
+       
         private void SaveToCSV(List<List<bool>> masks,int index)
         {
-            string savefile = "C:/Users/wakanao/source/repos/AutoHyperSpectral/" + index.ToString() + ".csv";
+            string savefile = "C:/Users/wakanao/source/repos/AutoHyperSpectral/" +index.ToString() + ".csv";
             using (StreamWriter streamWriter = new StreamWriter(savefile, false))
             {
                 //行名を書く

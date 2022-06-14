@@ -30,6 +30,7 @@ namespace AutoHyperSpectral.util
             {
                 string jsonString = JsonSerializer.Serialize(parameters);
                 var content = new StringContent(jsonString, Encoding.UTF8, "application/json");
+                client.Timeout = TimeSpan.FromMinutes(3); //wait for 3 minutes
                 HttpResponseMessage response =
                     await client.PostAsync($"http://127.0.0.1:5000/findHyperLeaf", content);
 
