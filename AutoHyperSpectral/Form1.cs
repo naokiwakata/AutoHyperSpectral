@@ -17,6 +17,7 @@ using System.Net.Http;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using OpenCvSharp.Extensions;
+using AutoHyperSpectral.domain;
 
 namespace AutoHyperSpectral
 {
@@ -121,6 +122,22 @@ namespace AutoHyperSpectral
             }
         }
 
+        private void SaveJson(object sender, EventArgs e)
+        {
+            Console.WriteLine("start");
+            var i = 0;
+            foreach (var checkBox in _checkBoxes)
+            {
+                if (checkBox.Checked == true)
+                {
+                 
+                    SaveToJSON(_predictMasks[i], i);
+                    Console.WriteLine(i);
+                }
+                i++;
+            }
+        }
+
         // 関数化
 
         private void CreateCheckBox(int index)
@@ -197,6 +214,119 @@ namespace AutoHyperSpectral
                     j++;
                 }
             }
+        }
+
+        private void SaveToJSON(List<List<bool>> masks, int index)
+        {
+            string savefile = "C:/Users/wakanao/source/repos/AutoHyperSpectral/" + index.ToString() + ".json";
+          
+            int imgWidth = masks[0].Count;
+            int imgHeight = masks.Count;
+            int j = 0;
+            List<PixelSpectral> pixelSpectrals = new List<PixelSpectral>();
+
+            for (int y = 0; y < imgHeight; y++)
+                {
+                    //画像を生成
+                    _videoCapture.PosFrames = y;
+                    var mat = new Mat();
+                    _videoCapture.Read(mat);
+
+                    int interval = mat.Height / 60;
+
+                    int l = 0;
+                    for (int x = 0; x < imgWidth; x++)
+                    {
+                        if (masks[j][l] == true)
+                        {
+                          
+                           
+                            //60band
+                            int[] bands = new int[60];
+                            for (int i = 0; i < 60; i++)
+                            {
+                                Vec3b pixel = mat.At<Vec3b>(i * interval, x);
+                                bands[i] = pixel.Item0;
+                            }
+                            PixelSpectral pixelSpectral =
+                          new PixelSpectral
+                          {
+                              X = x,
+                              Y = y,
+                              band1 = bands[0],
+                              band2 = bands[1],
+                              band3 = bands[2],
+                              band4 = bands[3],
+                              band5 = bands[4],
+                              band6 = bands[5],
+                              band7 = bands[6],
+                              band8 = bands[7],
+                              band9 = bands[8],
+                              band10 = bands[9],
+                              band11 = bands[10],
+                              band12 = bands[11],
+                              band13 = bands[12],
+                              band14 = bands[13],
+                              band15 = bands[14],
+                              band16 = bands[15],
+                              band17 = bands[16],
+                              band18 = bands[17],
+                              band19 = bands[18],
+                              band20 = bands[19],
+                              band21 = bands[20],
+                              band22 = bands[21],
+                              band23 = bands[22],
+                              band24 = bands[23],
+                              band25 = bands[24],
+                              band26 = bands[25],
+                              band27 = bands[26],
+                              band28 = bands[27],
+                              band29 = bands[28],
+                              band30 = bands[29],
+                              band31 = bands[30],
+                              band32 = bands[31],
+                              band33 = bands[32],
+                              band34 = bands[33],
+                              band35 = bands[34],
+                              band36 = bands[35],
+                              band37 = bands[36],
+                              band38 = bands[37],
+                              band39 = bands[38],
+                              band40 = bands[39],
+                              band41 = bands[40],
+                              band42 = bands[41],
+                              band43 = bands[42],
+                              band44 = bands[43],
+                              band45 = bands[44],
+                              band46 = bands[45],
+                              band47 = bands[46],
+                              band48 = bands[47],
+                              band49 = bands[48],
+                              band50 = bands[49],
+                              band51 = bands[50],
+                              band52 = bands[51],
+                              band53 = bands[52],
+                              band54 = bands[53],
+                              band55 = bands[54],
+                              band56 = bands[55],
+                              band57 = bands[56],
+                              band58 = bands[57],
+                              band59 = bands[58],
+                              band60 = bands[59],
+                          };
+                            pixelSpectrals.Add(pixelSpectral);
+                        }
+                        l++;
+                    }
+                    j++;
+                }
+            JsonSerializerOptions options = new JsonSerializerOptions
+            {
+                // インデントフォーマットあり
+                WriteIndented = true
+            };
+            string jsonString = JsonSerializer.Serialize(pixelSpectrals,options);
+            File.WriteAllText(savefile, jsonString);
         }
     }
 }
