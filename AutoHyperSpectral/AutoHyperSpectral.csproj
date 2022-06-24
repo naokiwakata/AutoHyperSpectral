@@ -86,6 +86,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="domain\DiseasePredict.cs" />
     <Compile Include="domain\PixelSpectral.cs" />
     <Compile Include="extension\Extensions.cs" />
     <Compile Include="Form1.cs">
@@ -94,7 +95,7 @@
     <Compile Include="Form1.Designer.cs">
       <DependentUpon>Form1.cs</DependentUpon>
     </Compile>
-    <Compile Include="domain\Predict.cs" />
+    <Compile Include="domain\LeafPredict.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="util\Dialog.cs" />

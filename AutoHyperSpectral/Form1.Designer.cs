@@ -94,7 +94,7 @@ namespace AutoHyperSpectral
             this.button3.TabIndex = 6;
             this.button3.Text = "csv";
             this.button3.UseVisualStyleBackColor = true;
-            this.button3.Click += new System.EventHandler(this.SaveFile);
+            this.button3.Click += new System.EventHandler(this.SaveCSV);
             // 
             // button5
             // 
@@ -114,6 +114,7 @@ namespace AutoHyperSpectral
             this.button6.TabIndex = 8;
             this.button6.Text = "judge";
             this.button6.UseVisualStyleBackColor = true;
+            this.button6.Click += new System.EventHandler(this.judgeDisease);
             // 
             // Form1
             // 
