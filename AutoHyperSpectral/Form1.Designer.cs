@@ -1,4 +1,6 @@
 ﻿
+using System.Windows.Forms;
+
 namespace AutoHyperSpectral
 {
     partial class Form1
@@ -31,13 +33,17 @@ namespace AutoHyperSpectral
         {
             this.button1 = new System.Windows.Forms.Button();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
-            this.button2 = new System.Windows.Forms.Button();
-            this.button4 = new System.Windows.Forms.Button();
+            this.detectLeafButton = new System.Windows.Forms.Button();
+            this.selectLeafButton = new System.Windows.Forms.Button();
             this.textBox1 = new System.Windows.Forms.TextBox();
-            this.button3 = new System.Windows.Forms.Button();
-            this.button5 = new System.Windows.Forms.Button();
-            this.button6 = new System.Windows.Forms.Button();
+            this.saveCsvButton = new System.Windows.Forms.Button();
+            this.saveJsonButton = new System.Windows.Forms.Button();
+            this.judgeDiseaseButton = new System.Windows.Forms.Button();
+            this.progressBar1 = new System.Windows.Forms.ProgressBar();
+            this.statusStrip1 = new System.Windows.Forms.StatusStrip();
+            this.toolStripProgressBar1 = new System.Windows.Forms.ToolStripProgressBar();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
+            this.statusStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
             // button1
@@ -59,25 +65,27 @@ namespace AutoHyperSpectral
             this.pictureBox1.TabIndex = 1;
             this.pictureBox1.TabStop = false;
             // 
-            // button2
+            // detectLeafButton
             // 
-            this.button2.Location = new System.Drawing.Point(29, 61);
-            this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(75, 23);
-            this.button2.TabIndex = 2;
-            this.button2.Text = "post";
-            this.button2.UseVisualStyleBackColor = true;
-            this.button2.Click += new System.EventHandler(this.PostImage);
+            this.detectLeafButton.Enabled = false;
+            this.detectLeafButton.Location = new System.Drawing.Point(29, 61);
+            this.detectLeafButton.Name = "detectLeafButton";
+            this.detectLeafButton.Size = new System.Drawing.Size(75, 23);
+            this.detectLeafButton.TabIndex = 2;
+            this.detectLeafButton.Text = "detect leaf";
+            this.detectLeafButton.UseVisualStyleBackColor = true;
+            this.detectLeafButton.Click += new System.EventHandler(this.PostImage);
             // 
-            // button4
+            // selectLeafButton
             // 
-            this.button4.Location = new System.Drawing.Point(29, 90);
-            this.button4.Name = "button4";
-            this.button4.Size = new System.Drawing.Size(75, 23);
-            this.button4.TabIndex = 4;
-            this.button4.Text = "select";
-            this.button4.UseVisualStyleBackColor = true;
-            this.button4.Click += new System.EventHandler(this.SelectLeaf);
+            this.selectLeafButton.Enabled = false;
+            this.selectLeafButton.Location = new System.Drawing.Point(29, 90);
+            this.selectLeafButton.Name = "selectLeafButton";
+            this.selectLeafButton.Size = new System.Drawing.Size(75, 23);
+            this.selectLeafButton.TabIndex = 4;
+            this.selectLeafButton.Text = "select leaf";
+            this.selectLeafButton.UseVisualStyleBackColor = true;
+            this.selectLeafButton.Click += new System.EventHandler(this.SelectLeaf);
             // 
             // textBox1
             // 
@@ -86,53 +94,86 @@ namespace AutoHyperSpectral
             this.textBox1.Size = new System.Drawing.Size(67, 19);
             this.textBox1.TabIndex = 5;
             // 
-            // button3
+            // saveCsvButton
             // 
-            this.button3.Location = new System.Drawing.Point(29, 119);
-            this.button3.Name = "button3";
-            this.button3.Size = new System.Drawing.Size(75, 23);
-            this.button3.TabIndex = 6;
-            this.button3.Text = "csv";
-            this.button3.UseVisualStyleBackColor = true;
-            this.button3.Click += new System.EventHandler(this.SaveCSV);
+            this.saveCsvButton.Enabled = false;
+            this.saveCsvButton.Location = new System.Drawing.Point(29, 119);
+            this.saveCsvButton.Name = "saveCsvButton";
+            this.saveCsvButton.Size = new System.Drawing.Size(75, 23);
+            this.saveCsvButton.TabIndex = 6;
+            this.saveCsvButton.Text = "save csv";
+            this.saveCsvButton.UseVisualStyleBackColor = true;
+            this.saveCsvButton.Click += new System.EventHandler(this.SaveCSV);
             // 
-            // button5
+            // saveJsonButton
             // 
-            this.button5.Location = new System.Drawing.Point(29, 148);
-            this.button5.Name = "button5";
-            this.button5.Size = new System.Drawing.Size(75, 23);
-            this.button5.TabIndex = 7;
-            this.button5.Text = "json";
-            this.button5.UseVisualStyleBackColor = true;
-            this.button5.Click += new System.EventHandler(this.SaveJson);
+            this.saveJsonButton.Enabled = false;
+            this.saveJsonButton.Location = new System.Drawing.Point(29, 148);
+            this.saveJsonButton.Name = "saveJsonButton";
+            this.saveJsonButton.Size = new System.Drawing.Size(75, 23);
+            this.saveJsonButton.TabIndex = 7;
+            this.saveJsonButton.Text = "save json";
+            this.saveJsonButton.UseVisualStyleBackColor = true;
+            this.saveJsonButton.Click += new System.EventHandler(this.SaveJson);
             // 
-            // button6
+            // judgeDiseaseButton
             // 
-            this.button6.Location = new System.Drawing.Point(29, 177);
-            this.button6.Name = "button6";
-            this.button6.Size = new System.Drawing.Size(75, 23);
-            this.button6.TabIndex = 8;
-            this.button6.Text = "judge";
-            this.button6.UseVisualStyleBackColor = true;
-            this.button6.Click += new System.EventHandler(this.judgeDisease);
+            this.judgeDiseaseButton.Enabled = false;
+            this.judgeDiseaseButton.Location = new System.Drawing.Point(29, 177);
+            this.judgeDiseaseButton.Name = "judgeDiseaseButton";
+            this.judgeDiseaseButton.Size = new System.Drawing.Size(75, 23);
+            this.judgeDiseaseButton.TabIndex = 8;
+            this.judgeDiseaseButton.Text = "judge disease";
+            this.judgeDiseaseButton.UseVisualStyleBackColor = true;
+            this.judgeDiseaseButton.Click += new System.EventHandler(this.judgeDisease);
+            // 
+            // progressBar1
+            // 
+            this.progressBar1.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.progressBar1.Location = new System.Drawing.Point(0, 427);
+            this.progressBar1.Name = "progressBar1";
+            this.progressBar1.Size = new System.Drawing.Size(800, 23);
+            this.progressBar1.TabIndex = 9;
+            this.progressBar1.Click += new System.EventHandler(this.progressBar1_Click);
+            // 
+            // statusStrip1
+            // 
+            this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.toolStripProgressBar1});
+            this.statusStrip1.Location = new System.Drawing.Point(0, 405);
+            this.statusStrip1.Name = "statusStrip1";
+            this.statusStrip1.Size = new System.Drawing.Size(800, 22);
+            this.statusStrip1.TabIndex = 10;
+            this.statusStrip1.Text = "statusStrip1";
+            // 
+            // toolStripProgressBar1
+            // 
+            this.toolStripProgressBar1.Name = "toolStripProgressBar1";
+            this.toolStripProgressBar1.Size = new System.Drawing.Size(100, 16);
+            this.toolStripProgressBar1.Click += new System.EventHandler(this.toolStripProgressBar1_Click);
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.AutoScroll = true;
             this.AutoSize = true;
             this.ClientSize = new System.Drawing.Size(800, 450);
-            this.Controls.Add(this.button6);
-            this.Controls.Add(this.button5);
-            this.Controls.Add(this.button3);
+            this.Controls.Add(this.statusStrip1);
+            this.Controls.Add(this.progressBar1);
+            this.Controls.Add(this.judgeDiseaseButton);
+            this.Controls.Add(this.saveJsonButton);
+            this.Controls.Add(this.saveCsvButton);
             this.Controls.Add(this.textBox1);
-            this.Controls.Add(this.button4);
-            this.Controls.Add(this.button2);
+            this.Controls.Add(this.selectLeafButton);
+            this.Controls.Add(this.detectLeafButton);
             this.Controls.Add(this.pictureBox1);
             this.Controls.Add(this.button1);
             this.Name = "Form1";
             this.Text = "Form1";
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
+            this.statusStrip1.ResumeLayout(false);
+            this.statusStrip1.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -142,12 +183,15 @@ namespace AutoHyperSpectral
 
         private System.Windows.Forms.Button button1;
         private System.Windows.Forms.PictureBox pictureBox1;
-        private System.Windows.Forms.Button button2;
-        private System.Windows.Forms.Button button4;
+        private System.Windows.Forms.Button detectLeafButton;
+        private System.Windows.Forms.Button selectLeafButton;
         private System.Windows.Forms.TextBox textBox1;
-        private System.Windows.Forms.Button button3;
-        private System.Windows.Forms.Button button5;
-        private System.Windows.Forms.Button button6;
+        private System.Windows.Forms.Button saveCsvButton;
+        private System.Windows.Forms.Button saveJsonButton;
+        private System.Windows.Forms.Button judgeDiseaseButton;
+        private System.Windows.Forms.ProgressBar progressBar1;
+        private StatusStrip statusStrip1;
+        public ToolStripProgressBar toolStripProgressBar1;
     }
 }
 

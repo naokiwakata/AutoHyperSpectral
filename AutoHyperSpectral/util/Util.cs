@@ -2,17 +2,18 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
+using AutoHyperSpectral;
 
 namespace AutoHyperSpectral.util
 {
     internal class Util
     {
+     
         private void SaveToCSV(List<List<bool>> masks, VideoCapture videoCapture,int index)
         {
+            Form1 form1 = new Form1();
+            var progressBar = form1.toolStripProgressBar1;
+
             string savefile = "C:/Users/wakanao/source/repos/AutoHyperSpectral/" + index.ToString() + ".csv";
             using (StreamWriter streamWriter = new StreamWriter(savefile, false))
             {
@@ -28,6 +29,12 @@ namespace AutoHyperSpectral.util
                 int imgWidth = masks[0].Count;
                 int imgHeight = masks.Count;
                 int j = 0;
+
+                progressBar.Visible = true;
+                progressBar.Minimum = 1;
+                progressBar.Maximum = imgHeight;
+                progressBar.Value = 1;
+                progressBar.Step = 1;
 
                 for (int y = 0; y < imgHeight; y++)
                 {
@@ -55,6 +62,7 @@ namespace AutoHyperSpectral.util
                         l++;
                     }
                     j++;
+                    progressBar.PerformStep();
                 }
             }
         }

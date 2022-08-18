@@ -1,22 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using OpenCvSharp;
-using AutoHyperSpectral;
 using ExtensionMethods;
 using AutoHyperSpectral.util;
 using System.IO;
-using System.Drawing.Imaging;
-using System.Net.Http;
 using System.Text.Json;
-using System.Text.Json.Serialization;
-using OpenCvSharp.Extensions;
 using AutoHyperSpectral.domain;
 
 namespace AutoHyperSpectral
@@ -47,17 +37,20 @@ namespace AutoHyperSpectral
 
         private void OpenAvi(object sender, EventArgs e)
         {
-            button2.Enabled = false;
-
+        
             Dialog dialog = new Dialog();
             _filename = dialog.openDialog();
 
+
             if (_filename == "") return;
 
+            // 動画を選んだら処理開始
+            clearState();
+
             _videoCapture = new VideoCapture(_filename);
-            _bitmap = _videoCapture.ToBmp();
+            _bitmap = _videoCapture.ToBmp(toolStripProgressBar1);
             pictureBox1.Image = _bitmap;
-            button2.Enabled = true;
+            detectLeafButton.Enabled = true;
 
          
         }
@@ -85,13 +78,16 @@ namespace AutoHyperSpectral
                 DrawBox(i);
             }
             pictureBox1.Image = _bitmap;
+
+            detectLeafButton.Enabled = true;
+            selectLeafButton.Enabled = true;
             textBox1.Text = "Finish!!!";
         }
 
         private void SelectLeaf(object sender, EventArgs e)
         {
             _videoCapture = new VideoCapture(_filename);
-            _bitmap = _videoCapture.ToBmp();
+            _bitmap = _videoCapture.ToBmp(toolStripProgressBar1);
 
             Console.WriteLine("--------------");
             var i = 0;
@@ -105,6 +101,9 @@ namespace AutoHyperSpectral
                 i++;
             }
             pictureBox1.Image = _bitmap;
+            saveCsvButton.Enabled = true;
+            saveJsonButton.Enabled = true;
+            judgeDiseaseButton.Enabled = true;
 
         }
         private void SaveCSV(object sender, EventArgs e)
@@ -170,6 +169,18 @@ namespace AutoHyperSpectral
             Console.WriteLine(jsonString);
             Http http = new Http();
             _diseasePredict = await http.JudgeDisease(jsonString);
+
+            var l = 0;
+            foreach (var checkBox in _checkBoxes)
+            {
+                if (checkBox.Checked == true)
+                {
+
+                    DrawJudgeResult(l);
+                }
+                l++;
+            }
+            pictureBox1.Image = _bitmap;
             Console.WriteLine(_diseasePredict);
         }
 
@@ -287,9 +298,9 @@ namespace AutoHyperSpectral
 
     private void CreateCheckBox(int index)
         {
-            int height = 150 + (index+1) *20;
+            int height = 90 + (index+1) *20;
             var checkBox = new CheckBox();
-            checkBox.Location = new System.Drawing.Point(30, height);
+            checkBox.Location = new System.Drawing.Point(120, height);
             checkBox.Checked = true;
             checkBox.Size = new System.Drawing.Size(75, 23);
             checkBox.Name = index.ToString();
@@ -312,7 +323,18 @@ namespace AutoHyperSpectral
 
             graphics.Dispose();
         }
-       
+        private void DrawJudgeResult(int i)
+        {
+            List<float> boxes = _predictBoxes[i];
+            List<List<bool>> masks = _predictMasks[i];
+            int classes = _predictClasses[i];
+
+            Graphics graphics = CreateGraphics();
+            graphics.DrawJudgeResult(_bitmap, boxes, i,_diseasePredict);
+
+            graphics.Dispose();
+        }
+
         private void SaveToCSV(List<List<bool>> masks,int index)
         {
             string savefile = "C:/Users/wakanao/source/repos/AutoHyperSpectral/" +index.ToString() + ".csv";
@@ -473,5 +495,40 @@ namespace AutoHyperSpectral
             string jsonString = JsonSerializer.Serialize(pixelSpectrals,options);
             File.WriteAllText(savefile, jsonString);
         }
+
+        private void clearState()
+        {
+            deactivateButton();
+
+            // clear checkbox 
+            foreach (var checkBox in _checkBoxes)
+            {
+                Controls.Remove(checkBox);
+            }
+            _checkBoxes.Clear();
+
+        }
+        private void deactivateButton()
+        {
+            detectLeafButton.Enabled = false;
+            selectLeafButton.Enabled = false;
+            saveCsvButton.Enabled = false;
+            saveJsonButton.Enabled = false;
+            judgeDiseaseButton.Enabled = false;
+
+        }
+
+
+        private void progressBar1_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void toolStripProgressBar1_Click(object sender, EventArgs e)
+        {
+
+        }
     }
+
+
 }
