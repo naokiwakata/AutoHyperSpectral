@@ -39,16 +39,17 @@ namespace AutoHyperSpectral
             this.saveCsvButton = new System.Windows.Forms.Button();
             this.saveJsonButton = new System.Windows.Forms.Button();
             this.judgeDiseaseButton = new System.Windows.Forms.Button();
-            this.progressBar1 = new System.Windows.Forms.ProgressBar();
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.toolStripProgressBar1 = new System.Windows.Forms.ToolStripProgressBar();
+            this.panel1 = new System.Windows.Forms.Panel();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.statusStrip1.SuspendLayout();
+            this.panel1.SuspendLayout();
             this.SuspendLayout();
             // 
             // button1
             // 
-            this.button1.Location = new System.Drawing.Point(29, 32);
+            this.button1.Location = new System.Drawing.Point(13, 13);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(75, 23);
             this.button1.TabIndex = 0;
@@ -58,7 +59,7 @@ namespace AutoHyperSpectral
             // 
             // pictureBox1
             // 
-            this.pictureBox1.Location = new System.Drawing.Point(227, 31);
+            this.pictureBox1.Location = new System.Drawing.Point(211, 12);
             this.pictureBox1.Name = "pictureBox1";
             this.pictureBox1.Size = new System.Drawing.Size(100, 48);
             this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
@@ -68,7 +69,7 @@ namespace AutoHyperSpectral
             // detectLeafButton
             // 
             this.detectLeafButton.Enabled = false;
-            this.detectLeafButton.Location = new System.Drawing.Point(29, 61);
+            this.detectLeafButton.Location = new System.Drawing.Point(13, 42);
             this.detectLeafButton.Name = "detectLeafButton";
             this.detectLeafButton.Size = new System.Drawing.Size(75, 23);
             this.detectLeafButton.TabIndex = 2;
@@ -79,7 +80,7 @@ namespace AutoHyperSpectral
             // selectLeafButton
             // 
             this.selectLeafButton.Enabled = false;
-            this.selectLeafButton.Location = new System.Drawing.Point(29, 90);
+            this.selectLeafButton.Location = new System.Drawing.Point(13, 71);
             this.selectLeafButton.Name = "selectLeafButton";
             this.selectLeafButton.Size = new System.Drawing.Size(75, 23);
             this.selectLeafButton.TabIndex = 4;
@@ -89,7 +90,7 @@ namespace AutoHyperSpectral
             // 
             // textBox1
             // 
-            this.textBox1.Location = new System.Drawing.Point(110, 65);
+            this.textBox1.Location = new System.Drawing.Point(94, 46);
             this.textBox1.Name = "textBox1";
             this.textBox1.Size = new System.Drawing.Size(67, 19);
             this.textBox1.TabIndex = 5;
@@ -97,7 +98,7 @@ namespace AutoHyperSpectral
             // saveCsvButton
             // 
             this.saveCsvButton.Enabled = false;
-            this.saveCsvButton.Location = new System.Drawing.Point(29, 119);
+            this.saveCsvButton.Location = new System.Drawing.Point(13, 100);
             this.saveCsvButton.Name = "saveCsvButton";
             this.saveCsvButton.Size = new System.Drawing.Size(75, 23);
             this.saveCsvButton.TabIndex = 6;
@@ -108,7 +109,7 @@ namespace AutoHyperSpectral
             // saveJsonButton
             // 
             this.saveJsonButton.Enabled = false;
-            this.saveJsonButton.Location = new System.Drawing.Point(29, 148);
+            this.saveJsonButton.Location = new System.Drawing.Point(13, 129);
             this.saveJsonButton.Name = "saveJsonButton";
             this.saveJsonButton.Size = new System.Drawing.Size(75, 23);
             this.saveJsonButton.TabIndex = 7;
@@ -119,7 +120,7 @@ namespace AutoHyperSpectral
             // judgeDiseaseButton
             // 
             this.judgeDiseaseButton.Enabled = false;
-            this.judgeDiseaseButton.Location = new System.Drawing.Point(29, 177);
+            this.judgeDiseaseButton.Location = new System.Drawing.Point(13, 158);
             this.judgeDiseaseButton.Name = "judgeDiseaseButton";
             this.judgeDiseaseButton.Size = new System.Drawing.Size(75, 23);
             this.judgeDiseaseButton.TabIndex = 8;
@@ -127,53 +128,60 @@ namespace AutoHyperSpectral
             this.judgeDiseaseButton.UseVisualStyleBackColor = true;
             this.judgeDiseaseButton.Click += new System.EventHandler(this.judgeDisease);
             // 
-            // progressBar1
-            // 
-            this.progressBar1.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.progressBar1.Location = new System.Drawing.Point(0, 427);
-            this.progressBar1.Name = "progressBar1";
-            this.progressBar1.Size = new System.Drawing.Size(800, 23);
-            this.progressBar1.TabIndex = 9;
-            this.progressBar1.Click += new System.EventHandler(this.progressBar1_Click);
-            // 
             // statusStrip1
             // 
+            this.statusStrip1.BackColor = System.Drawing.SystemColors.Control;
+            this.statusStrip1.GripStyle = System.Windows.Forms.ToolStripGripStyle.Visible;
+            this.statusStrip1.ImeMode = System.Windows.Forms.ImeMode.On;
             this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toolStripProgressBar1});
-            this.statusStrip1.Location = new System.Drawing.Point(0, 405);
+            this.statusStrip1.Location = new System.Drawing.Point(0, 428);
             this.statusStrip1.Name = "statusStrip1";
-            this.statusStrip1.Size = new System.Drawing.Size(800, 22);
+            this.statusStrip1.Size = new System.Drawing.Size(559, 22);
             this.statusStrip1.TabIndex = 10;
             this.statusStrip1.Text = "statusStrip1";
+            this.statusStrip1.ItemClicked += new System.Windows.Forms.ToolStripItemClickedEventHandler(this.statusStrip1_ItemClicked);
             // 
             // toolStripProgressBar1
             // 
             this.toolStripProgressBar1.Name = "toolStripProgressBar1";
+            this.toolStripProgressBar1.Overflow = System.Windows.Forms.ToolStripItemOverflow.Never;
             this.toolStripProgressBar1.Size = new System.Drawing.Size(100, 16);
             this.toolStripProgressBar1.Click += new System.EventHandler(this.toolStripProgressBar1_Click);
+            // 
+            // panel1
+            // 
+            this.panel1.AutoScroll = true;
+            this.panel1.AutoSize = true;
+            this.panel1.Controls.Add(this.button1);
+            this.panel1.Controls.Add(this.pictureBox1);
+            this.panel1.Controls.Add(this.detectLeafButton);
+            this.panel1.Controls.Add(this.judgeDiseaseButton);
+            this.panel1.Controls.Add(this.selectLeafButton);
+            this.panel1.Controls.Add(this.saveJsonButton);
+            this.panel1.Controls.Add(this.textBox1);
+            this.panel1.Controls.Add(this.saveCsvButton);
+            this.panel1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.panel1.Location = new System.Drawing.Point(0, 0);
+            this.panel1.Name = "panel1";
+            this.panel1.Size = new System.Drawing.Size(559, 428);
+            this.panel1.TabIndex = 11;
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.AutoScroll = true;
             this.AutoSize = true;
-            this.ClientSize = new System.Drawing.Size(800, 450);
+            this.ClientSize = new System.Drawing.Size(559, 450);
+            this.Controls.Add(this.panel1);
             this.Controls.Add(this.statusStrip1);
-            this.Controls.Add(this.progressBar1);
-            this.Controls.Add(this.judgeDiseaseButton);
-            this.Controls.Add(this.saveJsonButton);
-            this.Controls.Add(this.saveCsvButton);
-            this.Controls.Add(this.textBox1);
-            this.Controls.Add(this.selectLeafButton);
-            this.Controls.Add(this.detectLeafButton);
-            this.Controls.Add(this.pictureBox1);
-            this.Controls.Add(this.button1);
             this.Name = "Form1";
             this.Text = "Form1";
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.statusStrip1.ResumeLayout(false);
             this.statusStrip1.PerformLayout();
+            this.panel1.ResumeLayout(false);
+            this.panel1.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -189,9 +197,9 @@ namespace AutoHyperSpectral
         private System.Windows.Forms.Button saveCsvButton;
         private System.Windows.Forms.Button saveJsonButton;
         private System.Windows.Forms.Button judgeDiseaseButton;
-        private System.Windows.Forms.ProgressBar progressBar1;
         private StatusStrip statusStrip1;
         public ToolStripProgressBar toolStripProgressBar1;
+        private Panel panel1;
     }
 }
 

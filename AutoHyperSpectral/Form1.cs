@@ -19,6 +19,7 @@ namespace AutoHyperSpectral
 
         }
 
+        // 読み込むもの
         private Bitmap _bitmap;
         private string _filename;
         private VideoCapture _videoCapture;
@@ -57,31 +58,46 @@ namespace AutoHyperSpectral
         private async void PostImage(object sender, EventArgs e)
         {
             textBox1.Text = "...Loading...";
-            // connect to FLASK
-            if(_bitmap == null)
+            toolStripProgressBar1.Value = 0;
+            toolStripProgressBar1.Minimum = 0;
+            toolStripProgressBar1.Maximum = 4;
+
+            if (_bitmap == null)
             {
                 return; 
             }
+
+            toolStripProgressBar1.Value = 2;
+
+            // connect to FLASK
             Http http = new Http();
             _leafPredict = await http.PredictImage(_bitmap);
+
+            toolStripProgressBar1.Value = 3;
+
             _predictBoxes = _leafPredict.Boxes;
             _predictMasks = _leafPredict.Masks;
             _predictClasses = _leafPredict.Classes;
 
             Console.WriteLine("SUCEESS");
 
+            // show check box & bounding box
             int boxesCount = _leafPredict.Boxes.Count;
-
             for (int i = 0; i < boxesCount; i++)
             {
                 CreateCheckBox(i);
                 DrawBox(i);
             }
+
+            toolStripProgressBar1.Value = 4;
+
+            // show image
             pictureBox1.Image = _bitmap;
 
             detectLeafButton.Enabled = true;
             selectLeafButton.Enabled = true;
             textBox1.Text = "Finish!!!";
+            toolStripProgressBar1.Value = 0;
         }
 
         private void SelectLeaf(object sender, EventArgs e)
@@ -525,6 +541,11 @@ namespace AutoHyperSpectral
         }
 
         private void toolStripProgressBar1_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void statusStrip1_ItemClicked(object sender, ToolStripItemClickedEventArgs e)
         {
 
         }
