@@ -8,6 +8,7 @@ using AutoHyperSpectral.util;
 using System.IO;
 using System.Text.Json;
 using AutoHyperSpectral.domain;
+using System.Linq;
 
 namespace AutoHyperSpectral
 {
@@ -51,16 +52,21 @@ namespace AutoHyperSpectral
             _videoCapture = new VideoCapture(_filename);
             _bitmap = _videoCapture.ToBmp(toolStripProgressBar1);
             pictureBox1.Image = _bitmap;
+            pictureBox2.Image = _bitmap;
             detectLeafButton.Enabled = true;
 
          
         }
         private async void PostImage(object sender, EventArgs e)
         {
-            textBox1.Text = "...Loading...";
-            toolStripProgressBar1.Value = 0;
+            toolStripProgressBar1.Value = 1;
             toolStripProgressBar1.Minimum = 0;
             toolStripProgressBar1.Maximum = 4;
+
+            _videoCapture = new VideoCapture(_filename);
+            _bitmap = _videoCapture.ToBmp();
+
+            textBox1.Text = "...Loading...";
 
             if (_bitmap == null)
             {
@@ -102,8 +108,11 @@ namespace AutoHyperSpectral
 
         private void SelectLeaf(object sender, EventArgs e)
         {
+            toolStripProgressBar1.Value = 1;
+            toolStripProgressBar1.Minimum = 0;
+            toolStripProgressBar1.Maximum = 2;
             _videoCapture = new VideoCapture(_filename);
-            _bitmap = _videoCapture.ToBmp(toolStripProgressBar1);
+            _bitmap = _videoCapture.ToBmp();
 
             Console.WriteLine("--------------");
             var i = 0;
@@ -120,12 +129,17 @@ namespace AutoHyperSpectral
             saveCsvButton.Enabled = true;
             saveJsonButton.Enabled = true;
             judgeDiseaseButton.Enabled = true;
+            toolStripProgressBar1.Value = 0;
 
         }
         private void SaveCSV(object sender, EventArgs e)
         {
             Console.WriteLine("start");
             var i = 0;
+            toolStripProgressBar1.Value = 1;
+            toolStripProgressBar1.Minimum = 0;
+            toolStripProgressBar1.Maximum = _checkBoxes.Where(o => o.Checked == true).Count()+2;
+
             foreach (var checkBox in _checkBoxes)
             {
                 if (checkBox.Checked == true)
@@ -134,15 +148,23 @@ namespace AutoHyperSpectral
                     //util.SaveToCSV(_predictMasks[i], _videoCapture,i);
                     SaveToCSV(_predictMasks[i], i);
                     Console.WriteLine(i);
+                    toolStripProgressBar1.Value++;
+
                 }
                 i++;
             }
+            toolStripProgressBar1.Value = 0;
         }
 
         private void SaveJson(object sender, EventArgs e)
         {
             Console.WriteLine("start");
             var i = 0;
+
+            var a = _checkBoxes.Where(o => o.Checked == true).Count();
+            toolStripProgressBar1.Value = 1;
+            toolStripProgressBar1.Minimum = 0;
+            toolStripProgressBar1.Maximum = _checkBoxes.Where(o => o.Checked == true).Count()+2;
             foreach (var checkBox in _checkBoxes)
             {
                 if (checkBox.Checked == true)
@@ -150,13 +172,22 @@ namespace AutoHyperSpectral
                  
                     SaveToJSON(_predictMasks[i], i);
                     Console.WriteLine(i);
+                    toolStripProgressBar1.Value++;
+
                 }
                 i++;
+
             }
+            toolStripProgressBar1.Value = 0;
+
+
         }
 
         private async void judgeDisease(object sender, EventArgs e)
         {
+            _videoCapture = new VideoCapture(_filename);
+            _bitmap = _videoCapture.ToBmp(toolStripProgressBar1);
+
             Console.WriteLine("start");
             var i = 0;
             var jsons = new Dictionary<string, List<PixelSpectral>>();
@@ -325,7 +356,7 @@ namespace AutoHyperSpectral
             checkBox.UseVisualStyleBackColor = true;
 
             _checkBoxes.Add(checkBox);
-            Controls.Add(checkBox);
+            panel1.Controls.Add(checkBox);
         }
         private void DrawBox(int i)
         {
@@ -350,7 +381,27 @@ namespace AutoHyperSpectral
 
             graphics.Dispose();
         }
+        private void clearState()
+        {
+            deactivateButton();
 
+            // clear checkbox 
+            foreach (var checkBox in _checkBoxes)
+            {
+                Controls.Remove(checkBox);
+            }
+            _checkBoxes.Clear();
+
+        }
+        private void deactivateButton()
+        {
+            detectLeafButton.Enabled = false;
+            selectLeafButton.Enabled = false;
+            saveCsvButton.Enabled = false;
+            saveJsonButton.Enabled = false;
+            judgeDiseaseButton.Enabled = false;
+
+        }
         private void SaveToCSV(List<List<bool>> masks,int index)
         {
             string savefile = "C:/Users/wakanao/source/repos/AutoHyperSpectral/" +index.ToString() + ".csv";
@@ -512,28 +563,6 @@ namespace AutoHyperSpectral
             File.WriteAllText(savefile, jsonString);
         }
 
-        private void clearState()
-        {
-            deactivateButton();
-
-            // clear checkbox 
-            foreach (var checkBox in _checkBoxes)
-            {
-                Controls.Remove(checkBox);
-            }
-            _checkBoxes.Clear();
-
-        }
-        private void deactivateButton()
-        {
-            detectLeafButton.Enabled = false;
-            selectLeafButton.Enabled = false;
-            saveCsvButton.Enabled = false;
-            saveJsonButton.Enabled = false;
-            judgeDiseaseButton.Enabled = false;
-
-        }
-
 
         private void progressBar1_Click(object sender, EventArgs e)
         {
@@ -546,6 +575,16 @@ namespace AutoHyperSpectral
         }
 
         private void statusStrip1_ItemClicked(object sender, ToolStripItemClickedEventArgs e)
+        {
+
+        }
+
+        private void Form1_Load(object sender, EventArgs e)
+        {
+
+        }
+
+        private void pictureBox2_Click(object sender, EventArgs e)
         {
 
         }

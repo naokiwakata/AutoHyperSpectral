@@ -10,7 +10,7 @@ namespace ExtensionMethods
 {
     public static class MyExtensions
     {
-        public static Bitmap ToBmp(this VideoCapture capture, ToolStripProgressBar progressBar)
+        public static Bitmap ToBmp(this VideoCapture capture, ToolStripProgressBar progressBar = null)
         {
             Bitmap _bitmap;
             int frameCount = capture.FrameCount;
@@ -23,9 +23,12 @@ namespace ExtensionMethods
 
             originalMat.Dispose();
 
-            progressBar.Minimum = 0;
-            progressBar.Maximum = frameCount;
-            progressBar.Value = 0;
+            if (progressBar != null)
+            {
+                progressBar.Minimum = 0;
+                progressBar.Maximum = frameCount;
+                progressBar.Value = 0;
+            }
 
             //疑似近赤外の画像を書き出す
             int band40 = wavelengthsRange / 60 * 40;
@@ -47,10 +50,18 @@ namespace ExtensionMethods
                     viewMat.Set(i, j, pixel);
                 }
                 mat.Dispose();
-                progressBar.Value++;
+                if (progressBar != null)
+                {
+                    progressBar.Value++;
+
+                }
 
             }
-            progressBar.Value = 0;
+            if (progressBar != null)
+            {
+                progressBar.Value = 0;
+                progressBar.Value = 0;
+            }
             _bitmap = BitmapConverter.ToBitmap(viewMat);
             return _bitmap;
         }
