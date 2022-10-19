@@ -122,7 +122,7 @@ WIP
 ## スプレッドシート
 
 prediseaseとhealth，どの葉っぱを使用したか管理<br>
-[RGB葉画像集計表](https://docs.google.com/spreadsheets/d/1tbNKAV7CB1danPvVfIgWWCt4ZDSwH8v4kQqMqWD5iSs/edit#gid=0)
+[2021 RGB葉画像集計表](https://docs.google.com/spreadsheets/d/1tbNKAV7CB1danPvVfIgWWCt4ZDSwH8v4kQqMqWD5iSs/edit#gid=0)
 
 撮影の日付と撮影した苗などの管理<br>
 [2021カボチャ実験ラベルメモ 中村さん修論](https://docs.google.com/spreadsheets/d/1A35fo5pXOAmIu4tNjp6b3REp1l8pscE4r0eMGdCGqJQ/edit#gid=0)
