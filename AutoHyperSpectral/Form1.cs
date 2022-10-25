@@ -341,9 +341,22 @@ namespace AutoHyperSpectral
             string jsonString = JsonSerializer.Serialize(pixelSpectrals, options);
             return pixelSpectrals;
         }
-    // 関数化
 
-    private void CreateCheckBox(int index)
+        private void saveHyperImage(object sender, EventArgs e)
+        {
+            if(_bitmap != null)
+            {
+                var saveFileName = Path.GetFileNameWithoutExtension(_filename) + "_hyper" + ".jpg";
+
+                _bitmap.Save(
+                   saveFileName,
+                   System.Drawing.Imaging.ImageFormat.Jpeg
+                );
+            }
+        }
+        // 関数化
+
+        private void CreateCheckBox(int index)
         {
             int height = 90 + (index+1) *20;
             var checkBox = new CheckBox();
@@ -588,6 +601,8 @@ namespace AutoHyperSpectral
         {
 
         }
+
+
     }
 
 

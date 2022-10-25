@@ -43,6 +43,7 @@ namespace AutoHyperSpectral
             this.toolStripProgressBar1 = new System.Windows.Forms.ToolStripProgressBar();
             this.panel1 = new System.Windows.Forms.Panel();
             this.pictureBox2 = new System.Windows.Forms.PictureBox();
+            this.saveHyperImageButton = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.statusStrip1.SuspendLayout();
             this.panel1.SuspendLayout();
@@ -155,6 +156,7 @@ namespace AutoHyperSpectral
             // panel1
             // 
             this.panel1.AutoScroll = true;
+            this.panel1.Controls.Add(this.saveHyperImageButton);
             this.panel1.Controls.Add(this.pictureBox2);
             this.panel1.Controls.Add(this.button1);
             this.panel1.Controls.Add(this.pictureBox1);
@@ -179,6 +181,16 @@ namespace AutoHyperSpectral
             this.pictureBox2.TabIndex = 9;
             this.pictureBox2.TabStop = false;
             this.pictureBox2.Click += new System.EventHandler(this.pictureBox2_Click);
+            // 
+            // saveHyperImage
+            // 
+            this.saveHyperImageButton.Location = new System.Drawing.Point(13, 207);
+            this.saveHyperImageButton.Name = "saveHyperImageButton";
+            this.saveHyperImageButton.Size = new System.Drawing.Size(75, 23);
+            this.saveHyperImageButton.TabIndex = 10;
+            this.saveHyperImageButton.Text = "save h-img";
+            this.saveHyperImageButton.UseVisualStyleBackColor = true;
+            this.saveHyperImageButton.Click += new System.EventHandler(this.saveHyperImage);
             // 
             // Form1
             // 
@@ -216,6 +228,7 @@ namespace AutoHyperSpectral
         public ToolStripProgressBar toolStripProgressBar1;
         private Panel panel1;
         private PictureBox pictureBox2;
+        private Button saveHyperImageButton;
     }
 }
 
