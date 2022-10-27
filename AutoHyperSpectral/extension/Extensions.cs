@@ -131,5 +131,17 @@ namespace ExtensionMethods
             }
            
         }
+
+        public static List<OpenCvSharp.Point> ToPoints(this Trim trim)
+        {
+            List<OpenCvSharp.Point> cc2Points = new List<OpenCvSharp.Point>();
+            var points = trim.shapes[0].points;
+            foreach (var point in points)
+            {
+                OpenCvSharp.Point cv2Point = new OpenCvSharp.Point(point[0], point[1]);
+                cc2Points.Add(cv2Point);
+            }
+            return cc2Points;
+        }
     }
 }

@@ -24,6 +24,22 @@ namespace AutoHyperSpectral.util
             string filename = openFileDialog.FileName;
             return filename;
         }
+
+        public string openJsonFile()
+        {
+            //openFile
+            OpenFileDialog openFileDialog = new OpenFileDialog();
+
+            openFileDialog.Title = "jsonファイルを選択";
+            openFileDialog.AddExtension = true;
+            openFileDialog.Filter = "jsonファイル(*.json)|*.json";
+
+            DialogResult dialogResult = openFileDialog.ShowDialog();
+            if (dialogResult != DialogResult.OK) return "";
+
+            string filename = openFileDialog.FileName;
+            return filename;
+        }
     }
 
 }

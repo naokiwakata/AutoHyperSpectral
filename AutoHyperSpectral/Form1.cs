@@ -3,12 +3,14 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
 using OpenCvSharp;
+using OpenCvSharp.Extensions;
 using ExtensionMethods;
 using AutoHyperSpectral.util;
 using System.IO;
 using System.Text.Json;
 using AutoHyperSpectral.domain;
 using System.Linq;
+using Point = OpenCvSharp.Point;
 
 namespace AutoHyperSpectral
 {
@@ -346,7 +348,8 @@ namespace AutoHyperSpectral
         {
             if(_bitmap != null)
             {
-                var saveFileName = Path.GetFileNameWithoutExtension(_filename) + "_hyper" + ".jpg";
+
+                var saveFileName = _filename.Split('.')[0] + "_hyper" + ".jpg";
 
                 _bitmap.Save(
                    saveFileName,
@@ -601,8 +604,36 @@ namespace AutoHyperSpectral
         {
 
         }
+       
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+    
+            Dialog dialog = new Dialog();
+            var jsonFile = dialog.openJsonFile();
 
 
+            if (jsonFile == "") return;
+
+            using (StreamReader file = File.OpenText(jsonFile))
+            {
+                var trim
+                    = JsonSerializer.Deserialize<Trim>(file.ReadToEnd());
+        
+                // マスク画像を作成する
+                // 黒の下地の画像を作成
+                Mat mat = new Mat(trim.imageHeight,trim.imageWidth,MatType.CV_8U, new Scalar(1));
+                mat.SetTo(Scalar.Black);
+
+                // 領域を白でくり抜く
+                List<Point> points = trim.ToPoints();
+                List<List<Point>> ListOfListOfPoints = new List<List<Point>>();
+                ListOfListOfPoints.Add(points);
+                Cv2.FillPoly(mat, ListOfListOfPoints, Scalar.White);
+                pictureBox1.Image = BitmapConverter.ToBitmap(mat);
+
+            }
+        }
     }
 
 
