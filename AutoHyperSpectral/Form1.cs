@@ -622,15 +622,71 @@ namespace AutoHyperSpectral
         
                 // マスク画像を作成する
                 // 黒の下地の画像を作成
-                Mat mat = new Mat(trim.imageHeight,trim.imageWidth,MatType.CV_8U, new Scalar(1));
-                mat.SetTo(Scalar.Black);
+                Mat maskedMat = new Mat(trim.imageHeight,trim.imageWidth,MatType.CV_8U, new Scalar(1));
+                maskedMat.SetTo(Scalar.Black);
 
                 // 領域を白でくり抜く
                 List<Point> points = trim.ToPoints();
                 List<List<Point>> ListOfListOfPoints = new List<List<Point>>();
                 ListOfListOfPoints.Add(points);
-                Cv2.FillPoly(mat, ListOfListOfPoints, Scalar.White);
-                pictureBox1.Image = BitmapConverter.ToBitmap(mat);
+                Cv2.FillPoly(maskedMat, ListOfListOfPoints, Scalar.White);
+
+                // 領域を見つけ出す。BoundingRect
+                var rect = Cv2.BoundingRect(maskedMat);
+                Cv2.Rectangle(maskedMat, rect, Scalar.White);
+
+                // 領域の左上と右下の座標からfor文を回す
+                int x1 = rect.X;
+                int y1 = rect.Y;
+                int width = rect.Width; 
+                int height = rect.Height;
+
+                // CSVファイルを保存する
+                var saveFile = "D:/wakata_research/test.csv";
+                using (StreamWriter streamWriter = new StreamWriter(saveFile, false))
+                {
+                    //行名を書く
+                    String lineName = "X,Y,";
+                    for (int i = 0; i < 60; i++)
+                    {
+                        lineName = $"{lineName}" + $"band{i + 1},";
+
+                    }
+                    streamWriter.WriteLine(lineName);
+
+                    // 領域についてfor文を回す
+                    for (int y = y1; y < y1 + height; y++)
+                    {
+                        Console.WriteLine(y);
+                        //画像を生成
+                        _videoCapture.PosFrames = y;
+                        var mat = new Mat();
+                        _videoCapture.Read(mat);
+                       
+
+                        int interval = mat.Height / 60;
+                        for (int x = x1; x < x1 + width; x++)
+                        {
+                            // マスク画像の白黒で判別し波長情報を抜き出す
+                            var isWhite = maskedMat.At<Vec3b>(y, x).Item1 == 255;
+                            if (isWhite)
+                            {
+                                // 60バンドの波長情報書き込む
+                                String bandStr = $"{x},{y},";
+                                for (int i = 0; i < 60; i++)
+                                {
+                                    Vec3b pixel = mat.At<Vec3b>(i * interval, x);
+                                    bandStr = bandStr + pixel.Item0 + ",";
+                                }
+                                streamWriter.WriteLine(bandStr);
+                            }
+
+                        }
+                    }
+                }
+
+                // 画像表示
+                pictureBox2.Image = BitmapConverter.ToBitmap(maskedMat);
 
             }
         }
