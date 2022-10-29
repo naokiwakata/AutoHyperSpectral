@@ -39,6 +39,11 @@ namespace AutoHyperSpectral
         // 病気予測結果
         private DiseasePredict _diseasePredict;
 
+        // JSONからCSVを作成する時に使用する
+        private Mat _maskedMat;
+        private Rect _rect;
+        private string _jsonFile;
+
         private void OpenAvi(object sender, EventArgs e)
         {
 
@@ -605,19 +610,16 @@ namespace AutoHyperSpectral
 
         }
 
-        Mat _maskedMat;
-        Rect _rect;
-
         private void stackMaskButton_Click(object sender, EventArgs e)
         {
             Dialog dialog = new Dialog();
 
-            var jsonFile = dialog.openJsonFile();
+            _jsonFile = dialog.openJsonFile();
 
 
-            if (jsonFile == "") return;
+            if (_jsonFile == "") return;
 
-            using (StreamReader file = File.OpenText(jsonFile))
+            using (StreamReader file = File.OpenText(_jsonFile))
             {
                 var trim
                     = JsonSerializer.Deserialize<Trim>(file.ReadToEnd());
@@ -658,7 +660,8 @@ namespace AutoHyperSpectral
             toolStripProgressBar1.Maximum = height+1;
 
             // CSVファイルを保存する
-            var saveFile = "D:/wakata_research/test.csv";
+            var saveFile = _jsonFile.Split('.')[0] + ".csv";
+            //var saveFile = "D:/wakata_research/test.csv";
             using (StreamWriter streamWriter = new StreamWriter(saveFile, false))
             {
                 //行名を書く
