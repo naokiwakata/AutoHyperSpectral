@@ -185,7 +185,7 @@ namespace AutoHyperSpectral
             this.createCsvButton.TabIndex = 11;
             this.createCsvButton.Text = "save csv";
             this.createCsvButton.UseVisualStyleBackColor = true;
-            this.createCsvButton.Click += new System.EventHandler(this.button2_Click);
+            this.createCsvButton.Click += new System.EventHandler(this.saveCsvButtonByJson_Click);
             // 
             // saveHyperImageButton
             // 

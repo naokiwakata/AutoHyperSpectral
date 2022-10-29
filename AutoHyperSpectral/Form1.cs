@@ -642,15 +642,20 @@ namespace AutoHyperSpectral
                 graphics.FillLeafByMaskImage(_bitmap, _maskedMat);
                 pictureBox1.Image = _bitmap;
             }
+            // save csv ボタンを押せるようにする
             createCsvButton.Enabled = true;
         }
-        private void button2_Click(object sender, EventArgs e)
+        private void saveCsvButtonByJson_Click(object sender, EventArgs e)
         {
             // 領域の左上と右下の座標からfor文を回す
             int x1 = _rect.X;
             int y1 = _rect.Y;
             int width = _rect.Width;
             int height = _rect.Height;
+
+            toolStripProgressBar1.Value = 1;
+            toolStripProgressBar1.Minimum = 0;
+            toolStripProgressBar1.Maximum = height+1;
 
             // CSVファイルを保存する
             var saveFile = "D:/wakata_research/test.csv";
@@ -693,10 +698,13 @@ namespace AutoHyperSpectral
                         }
 
                     }
+                    toolStripProgressBar1.Value++;
 
                 }
 
             }
+            toolStripProgressBar1.Value = 0;
+
         }
     }
 
