@@ -635,6 +635,11 @@ namespace AutoHyperSpectral
                 var rect = Cv2.BoundingRect(maskedMat);
                 Cv2.Rectangle(maskedMat, rect, Scalar.White);
 
+                // マスク画像の重ね合わせ
+                Graphics graphics = CreateGraphics();
+                graphics.FillLeafByMaskImage(_bitmap, maskedMat);
+                pictureBox1.Image = _bitmap;
+
                 // 領域の左上と右下の座標からfor文を回す
                 int x1 = rect.X;
                 int y1 = rect.Y;
@@ -684,9 +689,6 @@ namespace AutoHyperSpectral
                         }
                     }
                 }
-
-                // 画像表示
-                pictureBox2.Image = BitmapConverter.ToBitmap(maskedMat);
 
             }
         }

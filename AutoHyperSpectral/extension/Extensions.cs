@@ -132,6 +132,28 @@ namespace ExtensionMethods
            
         }
 
+        public static void FillLeafByMaskImage(this Graphics graphics, Bitmap bitmap, Mat maskedMat)
+        {
+            graphics = Graphics.FromImage(bitmap);
+
+            int imgWidth = maskedMat.Width;
+            int imgHeight = maskedMat.Height;
+
+            for (int y = 0; y < imgHeight; y++)
+            {
+                for (int x = 0; x < imgWidth; x++)
+                {
+                    var isWhite = maskedMat.At<Vec3b>(y, x).Item1 == 255;
+                    if (isWhite)
+                    {
+                        Pen pen = new Pen(Color.FromArgb(40, Color.Green), 1);
+                        graphics.DrawRectangle(pen, new Rectangle(x, y, 1, 1));
+                        pen.Dispose();
+                    }
+                }
+            }
+        }
+
         public static List<OpenCvSharp.Point> ToPoints(this Trim trim)
         {
             List<OpenCvSharp.Point> cc2Points = new List<OpenCvSharp.Point>();
