@@ -41,7 +41,7 @@ namespace AutoHyperSpectral
 
         private void OpenAvi(object sender, EventArgs e)
         {
-        
+
             Dialog dialog = new Dialog();
             _filename = dialog.openDialog();
 
@@ -57,7 +57,7 @@ namespace AutoHyperSpectral
             pictureBox2.Image = _bitmap;
             detectLeafButton.Enabled = true;
 
-         
+
         }
         private async void PostImage(object sender, EventArgs e)
         {
@@ -72,7 +72,7 @@ namespace AutoHyperSpectral
 
             if (_bitmap == null)
             {
-                return; 
+                return;
             }
 
             toolStripProgressBar1.Value = 2;
@@ -140,7 +140,7 @@ namespace AutoHyperSpectral
             var i = 0;
             toolStripProgressBar1.Value = 1;
             toolStripProgressBar1.Minimum = 0;
-            toolStripProgressBar1.Maximum = _checkBoxes.Where(o => o.Checked == true).Count()+2;
+            toolStripProgressBar1.Maximum = _checkBoxes.Where(o => o.Checked == true).Count() + 2;
 
             foreach (var checkBox in _checkBoxes)
             {
@@ -166,12 +166,12 @@ namespace AutoHyperSpectral
             var a = _checkBoxes.Where(o => o.Checked == true).Count();
             toolStripProgressBar1.Value = 1;
             toolStripProgressBar1.Minimum = 0;
-            toolStripProgressBar1.Maximum = _checkBoxes.Where(o => o.Checked == true).Count()+2;
+            toolStripProgressBar1.Maximum = _checkBoxes.Where(o => o.Checked == true).Count() + 2;
             foreach (var checkBox in _checkBoxes)
             {
                 if (checkBox.Checked == true)
                 {
-                 
+
                     SaveToJSON(_predictMasks[i], i);
                     Console.WriteLine(i);
                     toolStripProgressBar1.Value++;
@@ -199,16 +199,16 @@ namespace AutoHyperSpectral
                 {
                     Util util = new Util();
                     //util.SaveToCSV(_predictMasks[i], _videoCapture,i);
-                    var json  = getJSON(_predictMasks[i], i);
+                    var json = getJSON(_predictMasks[i], i);
 
-                    jsons.Add(checkBox.Text,json);
+                    jsons.Add(checkBox.Text, json);
                     Console.WriteLine(i);
                 }
                 i++;
             }
             JsonSerializerOptions options = new JsonSerializerOptions
             {
-                
+
                 WriteIndented = false
             };
             string jsonString = JsonSerializer.Serialize(jsons, options);
@@ -346,7 +346,7 @@ namespace AutoHyperSpectral
 
         private void saveHyperImage(object sender, EventArgs e)
         {
-            if(_bitmap != null)
+            if (_bitmap != null)
             {
 
                 var saveFileName = _filename.Split('.')[0] + "_hyper" + ".jpg";
@@ -361,7 +361,7 @@ namespace AutoHyperSpectral
 
         private void CreateCheckBox(int index)
         {
-            int height = 90 + (index+1) *20;
+            int height = 90 + (index + 1) * 20;
             var checkBox = new CheckBox();
             checkBox.Location = new System.Drawing.Point(120, height);
             checkBox.Checked = true;
@@ -381,7 +381,7 @@ namespace AutoHyperSpectral
             int classes = _predictClasses[i];
 
             Graphics graphics = CreateGraphics();
-            graphics.DrawBox(_bitmap, boxes,i);
+            graphics.DrawBox(_bitmap, boxes, i);
             graphics.FillLeaf(_bitmap, masks);
 
             graphics.Dispose();
@@ -393,7 +393,7 @@ namespace AutoHyperSpectral
             int classes = _predictClasses[i];
 
             Graphics graphics = CreateGraphics();
-            graphics.DrawJudgeResult(_bitmap, boxes, i,_diseasePredict);
+            graphics.DrawJudgeResult(_bitmap, boxes, i, _diseasePredict);
 
             graphics.Dispose();
         }
@@ -418,9 +418,9 @@ namespace AutoHyperSpectral
             judgeDiseaseButton.Enabled = false;
 
         }
-        private void SaveToCSV(List<List<bool>> masks,int index)
+        private void SaveToCSV(List<List<bool>> masks, int index)
         {
-            string savefile = "C:/Users/wakanao/source/repos/AutoHyperSpectral/" +index.ToString() + ".csv";
+            string savefile = "C:/Users/wakanao/source/repos/AutoHyperSpectral/" + index.ToString() + ".csv";
             using (StreamWriter streamWriter = new StreamWriter(savefile, false))
             {
                 //行名を書く
@@ -469,113 +469,113 @@ namespace AutoHyperSpectral
         private void SaveToJSON(List<List<bool>> masks, int index)
         {
             string savefile = "C:/Users/wakanao/source/repos/AutoHyperSpectral/" + index.ToString() + ".json";
-          
+
             int imgWidth = masks[0].Count;
             int imgHeight = masks.Count;
             int j = 0;
             List<PixelSpectral> pixelSpectrals = new List<PixelSpectral>();
 
             for (int y = 0; y < imgHeight; y++)
+            {
+                //画像を生成
+                _videoCapture.PosFrames = y;
+                var mat = new Mat();
+                _videoCapture.Read(mat);
+
+                int interval = mat.Height / 60;
+
+                int l = 0;
+                for (int x = 0; x < imgWidth; x++)
                 {
-                    //画像を生成
-                    _videoCapture.PosFrames = y;
-                    var mat = new Mat();
-                    _videoCapture.Read(mat);
-
-                    int interval = mat.Height / 60;
-
-                    int l = 0;
-                    for (int x = 0; x < imgWidth; x++)
+                    if (masks[j][l] == true)
                     {
-                        if (masks[j][l] == true)
+
+
+                        //60band
+                        int[] bands = new int[60];
+                        for (int i = 0; i < 60; i++)
                         {
-                          
-                           
-                            //60band
-                            int[] bands = new int[60];
-                            for (int i = 0; i < 60; i++)
-                            {
-                                Vec3b pixel = mat.At<Vec3b>(i * interval, x);
-                                bands[i] = pixel.Item0;
-                            }
-                            PixelSpectral pixelSpectral =
-                          new PixelSpectral
-                          {
-                              X = x,
-                              Y = y,
-                              band1 = bands[0],
-                              band2 = bands[1],
-                              band3 = bands[2],
-                              band4 = bands[3],
-                              band5 = bands[4],
-                              band6 = bands[5],
-                              band7 = bands[6],
-                              band8 = bands[7],
-                              band9 = bands[8],
-                              band10 = bands[9],
-                              band11 = bands[10],
-                              band12 = bands[11],
-                              band13 = bands[12],
-                              band14 = bands[13],
-                              band15 = bands[14],
-                              band16 = bands[15],
-                              band17 = bands[16],
-                              band18 = bands[17],
-                              band19 = bands[18],
-                              band20 = bands[19],
-                              band21 = bands[20],
-                              band22 = bands[21],
-                              band23 = bands[22],
-                              band24 = bands[23],
-                              band25 = bands[24],
-                              band26 = bands[25],
-                              band27 = bands[26],
-                              band28 = bands[27],
-                              band29 = bands[28],
-                              band30 = bands[29],
-                              band31 = bands[30],
-                              band32 = bands[31],
-                              band33 = bands[32],
-                              band34 = bands[33],
-                              band35 = bands[34],
-                              band36 = bands[35],
-                              band37 = bands[36],
-                              band38 = bands[37],
-                              band39 = bands[38],
-                              band40 = bands[39],
-                              band41 = bands[40],
-                              band42 = bands[41],
-                              band43 = bands[42],
-                              band44 = bands[43],
-                              band45 = bands[44],
-                              band46 = bands[45],
-                              band47 = bands[46],
-                              band48 = bands[47],
-                              band49 = bands[48],
-                              band50 = bands[49],
-                              band51 = bands[50],
-                              band52 = bands[51],
-                              band53 = bands[52],
-                              band54 = bands[53],
-                              band55 = bands[54],
-                              band56 = bands[55],
-                              band57 = bands[56],
-                              band58 = bands[57],
-                              band59 = bands[58],
-                              band60 = bands[59],
-                          };
-                            pixelSpectrals.Add(pixelSpectral);
+                            Vec3b pixel = mat.At<Vec3b>(i * interval, x);
+                            bands[i] = pixel.Item0;
                         }
-                        l++;
+                        PixelSpectral pixelSpectral =
+                      new PixelSpectral
+                      {
+                          X = x,
+                          Y = y,
+                          band1 = bands[0],
+                          band2 = bands[1],
+                          band3 = bands[2],
+                          band4 = bands[3],
+                          band5 = bands[4],
+                          band6 = bands[5],
+                          band7 = bands[6],
+                          band8 = bands[7],
+                          band9 = bands[8],
+                          band10 = bands[9],
+                          band11 = bands[10],
+                          band12 = bands[11],
+                          band13 = bands[12],
+                          band14 = bands[13],
+                          band15 = bands[14],
+                          band16 = bands[15],
+                          band17 = bands[16],
+                          band18 = bands[17],
+                          band19 = bands[18],
+                          band20 = bands[19],
+                          band21 = bands[20],
+                          band22 = bands[21],
+                          band23 = bands[22],
+                          band24 = bands[23],
+                          band25 = bands[24],
+                          band26 = bands[25],
+                          band27 = bands[26],
+                          band28 = bands[27],
+                          band29 = bands[28],
+                          band30 = bands[29],
+                          band31 = bands[30],
+                          band32 = bands[31],
+                          band33 = bands[32],
+                          band34 = bands[33],
+                          band35 = bands[34],
+                          band36 = bands[35],
+                          band37 = bands[36],
+                          band38 = bands[37],
+                          band39 = bands[38],
+                          band40 = bands[39],
+                          band41 = bands[40],
+                          band42 = bands[41],
+                          band43 = bands[42],
+                          band44 = bands[43],
+                          band45 = bands[44],
+                          band46 = bands[45],
+                          band47 = bands[46],
+                          band48 = bands[47],
+                          band49 = bands[48],
+                          band50 = bands[49],
+                          band51 = bands[50],
+                          band52 = bands[51],
+                          band53 = bands[52],
+                          band54 = bands[53],
+                          band55 = bands[54],
+                          band56 = bands[55],
+                          band57 = bands[56],
+                          band58 = bands[57],
+                          band59 = bands[58],
+                          band60 = bands[59],
+                      };
+                        pixelSpectrals.Add(pixelSpectral);
                     }
-                    j++;
+                    l++;
                 }
+                j++;
+            }
             JsonSerializerOptions options = new JsonSerializerOptions
             {
                 // インデントフォーマットあり
                 WriteIndented = true
             };
-            string jsonString = JsonSerializer.Serialize(pixelSpectrals,options);
+            string jsonString = JsonSerializer.Serialize(pixelSpectrals, options);
             File.WriteAllText(savefile, jsonString);
         }
 
@@ -604,12 +604,14 @@ namespace AutoHyperSpectral
         {
 
         }
-       
 
-        private void button2_Click(object sender, EventArgs e)
+        Mat _maskedMat;
+        Rect _rect;
+
+        private void stackMaskButton_Click(object sender, EventArgs e)
         {
-    
             Dialog dialog = new Dialog();
+
             var jsonFile = dialog.openJsonFile();
 
 
@@ -619,75 +621,79 @@ namespace AutoHyperSpectral
             {
                 var trim
                     = JsonSerializer.Deserialize<Trim>(file.ReadToEnd());
-        
+
                 // マスク画像を作成する
                 // 黒の下地の画像を作成
-                Mat maskedMat = new Mat(trim.imageHeight,trim.imageWidth,MatType.CV_8U, new Scalar(1));
-                maskedMat.SetTo(Scalar.Black);
+                _maskedMat = new Mat(trim.imageHeight, trim.imageWidth, MatType.CV_8U, new Scalar(1));
+                _maskedMat.SetTo(Scalar.Black);
 
                 // 領域を白でくり抜く
                 List<Point> points = trim.ToPoints();
                 List<List<Point>> ListOfListOfPoints = new List<List<Point>>();
                 ListOfListOfPoints.Add(points);
-                Cv2.FillPoly(maskedMat, ListOfListOfPoints, Scalar.White);
+                Cv2.FillPoly(_maskedMat, ListOfListOfPoints, Scalar.White);
 
                 // 領域を見つけ出す。BoundingRect
-                var rect = Cv2.BoundingRect(maskedMat);
-                Cv2.Rectangle(maskedMat, rect, Scalar.White);
+                _rect = Cv2.BoundingRect(_maskedMat);
+                Cv2.Rectangle(_maskedMat, _rect, Scalar.White);
 
                 // マスク画像の重ね合わせ
                 Graphics graphics = CreateGraphics();
-                graphics.FillLeafByMaskImage(_bitmap, maskedMat);
+                graphics.FillLeafByMaskImage(_bitmap, _maskedMat);
                 pictureBox1.Image = _bitmap;
+            }
+            createCsvButton.Enabled = true;
+        }
+        private void button2_Click(object sender, EventArgs e)
+        {
+            // 領域の左上と右下の座標からfor文を回す
+            int x1 = _rect.X;
+            int y1 = _rect.Y;
+            int width = _rect.Width;
+            int height = _rect.Height;
 
-                // 領域の左上と右下の座標からfor文を回す
-                int x1 = rect.X;
-                int y1 = rect.Y;
-                int width = rect.Width; 
-                int height = rect.Height;
-
-                // CSVファイルを保存する
-                var saveFile = "D:/wakata_research/test.csv";
-                using (StreamWriter streamWriter = new StreamWriter(saveFile, false))
+            // CSVファイルを保存する
+            var saveFile = "D:/wakata_research/test.csv";
+            using (StreamWriter streamWriter = new StreamWriter(saveFile, false))
+            {
+                //行名を書く
+                String lineName = "X,Y,";
+                for (int i = 0; i < 60; i++)
                 {
-                    //行名を書く
-                    String lineName = "X,Y,";
-                    for (int i = 0; i < 60; i++)
+                    lineName = $"{lineName}" + $"band{i + 1},";
+
+                }
+                streamWriter.WriteLine(lineName);
+
+                // 領域についてfor文を回す
+                for (int y = y1; y < y1 + height; y++)
+                {
+                    Console.WriteLine(y);
+                    //画像を生成
+                    _videoCapture.PosFrames = y;
+                    var mat = new Mat();
+                    _videoCapture.Read(mat);
+
+
+                    int interval = mat.Height / 60;
+                    for (int x = x1; x < x1 + width; x++)
                     {
-                        lineName = $"{lineName}" + $"band{i + 1},";
-
-                    }
-                    streamWriter.WriteLine(lineName);
-
-                    // 領域についてfor文を回す
-                    for (int y = y1; y < y1 + height; y++)
-                    {
-                        Console.WriteLine(y);
-                        //画像を生成
-                        _videoCapture.PosFrames = y;
-                        var mat = new Mat();
-                        _videoCapture.Read(mat);
-                       
-
-                        int interval = mat.Height / 60;
-                        for (int x = x1; x < x1 + width; x++)
+                        // マスク画像の白黒で判別し波長情報を抜き出す
+                        var isWhite = _maskedMat.At<Vec3b>(y, x).Item1 == 255;
+                        if (isWhite)
                         {
-                            // マスク画像の白黒で判別し波長情報を抜き出す
-                            var isWhite = maskedMat.At<Vec3b>(y, x).Item1 == 255;
-                            if (isWhite)
+                            // 60バンドの波長情報書き込む
+                            String bandStr = $"{x},{y},";
+                            for (int i = 0; i < 60; i++)
                             {
-                                // 60バンドの波長情報書き込む
-                                String bandStr = $"{x},{y},";
-                                for (int i = 0; i < 60; i++)
-                                {
-                                    Vec3b pixel = mat.At<Vec3b>(i * interval, x);
-                                    bandStr = bandStr + pixel.Item0 + ",";
-                                }
-                                streamWriter.WriteLine(bandStr);
+                                Vec3b pixel = mat.At<Vec3b>(i * interval, x);
+                                bandStr = bandStr + pixel.Item0 + ",";
                             }
-
+                            streamWriter.WriteLine(bandStr);
                         }
+
                     }
+
                 }
 
             }

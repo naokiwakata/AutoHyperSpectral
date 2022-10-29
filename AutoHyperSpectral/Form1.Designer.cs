@@ -42,9 +42,10 @@ namespace AutoHyperSpectral
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.toolStripProgressBar1 = new System.Windows.Forms.ToolStripProgressBar();
             this.panel1 = new System.Windows.Forms.Panel();
+            this.createCsvButton = new System.Windows.Forms.Button();
             this.saveHyperImageButton = new System.Windows.Forms.Button();
             this.pictureBox2 = new System.Windows.Forms.PictureBox();
-            this.button2 = new System.Windows.Forms.Button();
+            this.stackMaskButton = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.statusStrip1.SuspendLayout();
             this.panel1.SuspendLayout();
@@ -157,7 +158,8 @@ namespace AutoHyperSpectral
             // panel1
             // 
             this.panel1.AutoScroll = true;
-            this.panel1.Controls.Add(this.button2);
+            this.panel1.Controls.Add(this.stackMaskButton);
+            this.panel1.Controls.Add(this.createCsvButton);
             this.panel1.Controls.Add(this.saveHyperImageButton);
             this.panel1.Controls.Add(this.pictureBox2);
             this.panel1.Controls.Add(this.button1);
@@ -173,6 +175,17 @@ namespace AutoHyperSpectral
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(1003, 450);
             this.panel1.TabIndex = 11;
+            // 
+            // createCsvButton
+            // 
+            this.createCsvButton.Enabled = false;
+            this.createCsvButton.Location = new System.Drawing.Point(12, 265);
+            this.createCsvButton.Name = "createCsvButton";
+            this.createCsvButton.Size = new System.Drawing.Size(75, 23);
+            this.createCsvButton.TabIndex = 11;
+            this.createCsvButton.Text = "save csv";
+            this.createCsvButton.UseVisualStyleBackColor = true;
+            this.createCsvButton.Click += new System.EventHandler(this.button2_Click);
             // 
             // saveHyperImageButton
             // 
@@ -194,15 +207,15 @@ namespace AutoHyperSpectral
             this.pictureBox2.TabStop = false;
             this.pictureBox2.Click += new System.EventHandler(this.pictureBox2_Click);
             // 
-            // button2
+            // stackMaskButton
             // 
-            this.button2.Location = new System.Drawing.Point(12, 236);
-            this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(75, 23);
-            this.button2.TabIndex = 11;
-            this.button2.Text = "read json";
-            this.button2.UseVisualStyleBackColor = true;
-            this.button2.Click += new System.EventHandler(this.button2_Click);
+            this.stackMaskButton.Location = new System.Drawing.Point(13, 236);
+            this.stackMaskButton.Name = "stackMaskButton";
+            this.stackMaskButton.Size = new System.Drawing.Size(75, 23);
+            this.stackMaskButton.TabIndex = 12;
+            this.stackMaskButton.Text = "stack mask";
+            this.stackMaskButton.UseVisualStyleBackColor = true;
+            this.stackMaskButton.Click += new System.EventHandler(this.stackMaskButton_Click);
             // 
             // Form1
             // 
@@ -241,7 +254,8 @@ namespace AutoHyperSpectral
         private Panel panel1;
         private PictureBox pictureBox2;
         private Button saveHyperImageButton;
-        private Button button2;
+        private Button createCsvButton;
+        private Button stackMaskButton;
     }
 }
 
