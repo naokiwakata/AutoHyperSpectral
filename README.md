@@ -1,4 +1,13 @@
-﻿# 2021研究概要
+# ハイパースペクトル自動判別アプリ
+
+<img src="https://user-images.githubusercontent.com/65523426/205562026-718ec7a3-85e3-4eb0-af5d-972feb22d983.png" width="500">
+
+## 実装
+- クライアント・サーバー方式で「動画・画像処理」と「機械学習による物体検出と病気判別」の処理を分けている
+- クライアント側はC#で実装（このリポジトリ）
+- サーバー側はPython(Flask)で実装(https://github.com/naokiwakata/detect_leaf_backend3)
+
+# 2021研究概要
 
 # 実験方法(データ取得方法)
 ## 使用したもの
