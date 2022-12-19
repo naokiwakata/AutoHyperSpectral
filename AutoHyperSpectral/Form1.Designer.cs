@@ -42,10 +42,13 @@ namespace AutoHyperSpectral
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.toolStripProgressBar1 = new System.Windows.Forms.ToolStripProgressBar();
             this.panel1 = new System.Windows.Forms.Panel();
+            this.stackMaskButton = new System.Windows.Forms.Button();
             this.createCsvButton = new System.Windows.Forms.Button();
             this.saveHyperImageButton = new System.Windows.Forms.Button();
             this.pictureBox2 = new System.Windows.Forms.PictureBox();
-            this.stackMaskButton = new System.Windows.Forms.Button();
+            this.label1 = new System.Windows.Forms.Label();
+            this.label2 = new System.Windows.Forms.Label();
+            this.label3 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.statusStrip1.SuspendLayout();
             this.panel1.SuspendLayout();
@@ -54,7 +57,7 @@ namespace AutoHyperSpectral
             // 
             // button1
             // 
-            this.button1.Location = new System.Drawing.Point(13, 13);
+            this.button1.Location = new System.Drawing.Point(12, 37);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(75, 23);
             this.button1.TabIndex = 0;
@@ -75,7 +78,7 @@ namespace AutoHyperSpectral
             // detectLeafButton
             // 
             this.detectLeafButton.Enabled = false;
-            this.detectLeafButton.Location = new System.Drawing.Point(13, 42);
+            this.detectLeafButton.Location = new System.Drawing.Point(12, 68);
             this.detectLeafButton.Name = "detectLeafButton";
             this.detectLeafButton.Size = new System.Drawing.Size(75, 23);
             this.detectLeafButton.TabIndex = 2;
@@ -86,7 +89,7 @@ namespace AutoHyperSpectral
             // selectLeafButton
             // 
             this.selectLeafButton.Enabled = false;
-            this.selectLeafButton.Location = new System.Drawing.Point(13, 71);
+            this.selectLeafButton.Location = new System.Drawing.Point(13, 97);
             this.selectLeafButton.Name = "selectLeafButton";
             this.selectLeafButton.Size = new System.Drawing.Size(75, 23);
             this.selectLeafButton.TabIndex = 4;
@@ -96,7 +99,7 @@ namespace AutoHyperSpectral
             // 
             // textBox1
             // 
-            this.textBox1.Location = new System.Drawing.Point(94, 46);
+            this.textBox1.Location = new System.Drawing.Point(93, 68);
             this.textBox1.Name = "textBox1";
             this.textBox1.Size = new System.Drawing.Size(67, 19);
             this.textBox1.TabIndex = 5;
@@ -104,7 +107,7 @@ namespace AutoHyperSpectral
             // saveCsvButton
             // 
             this.saveCsvButton.Enabled = false;
-            this.saveCsvButton.Location = new System.Drawing.Point(13, 100);
+            this.saveCsvButton.Location = new System.Drawing.Point(13, 211);
             this.saveCsvButton.Name = "saveCsvButton";
             this.saveCsvButton.Size = new System.Drawing.Size(75, 23);
             this.saveCsvButton.TabIndex = 6;
@@ -115,7 +118,7 @@ namespace AutoHyperSpectral
             // saveJsonButton
             // 
             this.saveJsonButton.Enabled = false;
-            this.saveJsonButton.Location = new System.Drawing.Point(13, 129);
+            this.saveJsonButton.Location = new System.Drawing.Point(13, 182);
             this.saveJsonButton.Name = "saveJsonButton";
             this.saveJsonButton.Size = new System.Drawing.Size(75, 23);
             this.saveJsonButton.TabIndex = 7;
@@ -126,7 +129,7 @@ namespace AutoHyperSpectral
             // judgeDiseaseButton
             // 
             this.judgeDiseaseButton.Enabled = false;
-            this.judgeDiseaseButton.Location = new System.Drawing.Point(13, 158);
+            this.judgeDiseaseButton.Location = new System.Drawing.Point(13, 126);
             this.judgeDiseaseButton.Name = "judgeDiseaseButton";
             this.judgeDiseaseButton.Size = new System.Drawing.Size(75, 23);
             this.judgeDiseaseButton.TabIndex = 8;
@@ -158,6 +161,9 @@ namespace AutoHyperSpectral
             // panel1
             // 
             this.panel1.AutoScroll = true;
+            this.panel1.Controls.Add(this.label3);
+            this.panel1.Controls.Add(this.label2);
+            this.panel1.Controls.Add(this.label1);
             this.panel1.Controls.Add(this.stackMaskButton);
             this.panel1.Controls.Add(this.createCsvButton);
             this.panel1.Controls.Add(this.saveHyperImageButton);
@@ -175,11 +181,22 @@ namespace AutoHyperSpectral
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(1003, 450);
             this.panel1.TabIndex = 11;
+            this.panel1.Paint += new System.Windows.Forms.PaintEventHandler(this.panel1_Paint);
+            // 
+            // stackMaskButton
+            // 
+            this.stackMaskButton.Location = new System.Drawing.Point(13, 293);
+            this.stackMaskButton.Name = "stackMaskButton";
+            this.stackMaskButton.Size = new System.Drawing.Size(75, 23);
+            this.stackMaskButton.TabIndex = 12;
+            this.stackMaskButton.Text = "stack mask";
+            this.stackMaskButton.UseVisualStyleBackColor = true;
+            this.stackMaskButton.Click += new System.EventHandler(this.stackMaskButton_Click);
             // 
             // createCsvButton
             // 
             this.createCsvButton.Enabled = false;
-            this.createCsvButton.Location = new System.Drawing.Point(12, 265);
+            this.createCsvButton.Location = new System.Drawing.Point(12, 322);
             this.createCsvButton.Name = "createCsvButton";
             this.createCsvButton.Size = new System.Drawing.Size(75, 23);
             this.createCsvButton.TabIndex = 11;
@@ -189,7 +206,7 @@ namespace AutoHyperSpectral
             // 
             // saveHyperImageButton
             // 
-            this.saveHyperImageButton.Location = new System.Drawing.Point(13, 207);
+            this.saveHyperImageButton.Location = new System.Drawing.Point(12, 264);
             this.saveHyperImageButton.Name = "saveHyperImageButton";
             this.saveHyperImageButton.Size = new System.Drawing.Size(75, 23);
             this.saveHyperImageButton.TabIndex = 10;
@@ -207,15 +224,35 @@ namespace AutoHyperSpectral
             this.pictureBox2.TabStop = false;
             this.pictureBox2.Click += new System.EventHandler(this.pictureBox2_Click);
             // 
-            // stackMaskButton
+            // label1
             // 
-            this.stackMaskButton.Location = new System.Drawing.Point(13, 236);
-            this.stackMaskButton.Name = "stackMaskButton";
-            this.stackMaskButton.Size = new System.Drawing.Size(75, 23);
-            this.stackMaskButton.TabIndex = 12;
-            this.stackMaskButton.Text = "stack mask";
-            this.stackMaskButton.UseVisualStyleBackColor = true;
-            this.stackMaskButton.Click += new System.EventHandler(this.stackMaskButton_Click);
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(22, 249);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(55, 12);
+            this.label1.TabIndex = 13;
+            this.label1.Text = "マスク画像";
+            this.label1.Click += new System.EventHandler(this.label1_Click);
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(34, 167);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(29, 12);
+            this.label2.TabIndex = 14;
+            this.label2.Text = "保存";
+            this.label2.Click += new System.EventHandler(this.label2_Click);
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(24, 22);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(53, 12);
+            this.label3.TabIndex = 15;
+            this.label3.Text = "自動判別";
+            this.label3.Click += new System.EventHandler(this.label3_Click);
             // 
             // Form1
             // 
@@ -256,6 +293,9 @@ namespace AutoHyperSpectral
         private Button saveHyperImageButton;
         private Button createCsvButton;
         private Button stackMaskButton;
+        private Label label1;
+        private Label label2;
+        private Label label3;
     }
 }
 
